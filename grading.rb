@@ -1,4 +1,5 @@
 
+
 def sort(unsorted_list)
   unsorted_list.sort { |a, b| b <=> a }
 end
@@ -13,17 +14,28 @@ def find_duplicates(sorted_list)
     return results
 end
 
+
 def remove_duplicates(arr)
   arr.uniq!
+end
+
+def sum_array(array)
+index = 0
+length = array.length
+  sum = 0
+  while index < length do
+    sum += array[index + 1]
+  end
 end
 
 def fill_array(value, length)
   arr = []
   i = 0
-  until i > length
+  until i >= length
     arr.push(value)
     i += 1
   end
+  return arr;
 end
 
 # if the length of the List is less than the bucket list, this callback function
@@ -39,17 +51,17 @@ sortedList.length.times do
     score: sortedList[i],
     grade: "A"
       });
-    elsif sortedList[i] >= 80 && sortedList[i] < 90
+    elsif sortedList[i] >= 80
       changeGrades.push({
       score: sortedList[i],
       grade: "B"
       })
-      elsif sortedList[i] >= 70  && sortedList[i] < 80
+      elsif sortedList[i] >= 70
         changeGrades.push({
           score: sortedList[i],
           grade: "C"
         });
-      elsif sortedList[i] >= 60  && sortedList[i] < 70
+      elsif sortedList[i] >= 60
         changeGrades.push({
         score: sortedList[i],
         grade: "D"
@@ -65,18 +77,21 @@ end
   puts changeGrades
 end
 
+
+
+
 # This function will determine which grading will be appropriate. Traditional if
 # the length is less than 5. Relative if more than five and has duplicates.
 
 def relative_grading(unsorted_list)
    config = {
-    buckets: ['A','B','C','D','F'],
+    buckets: ['A','B','C','D','F'], # each bucket has a letter grade for score.
     rounding: 'ceiling',
     debugging: false
   }
 
   if unsorted_list.length < config[:buckets].length
-    console.log("Scorelist containes less than 5 value resulting in relative grading to be useless. Proceeding to traditional grading")
+    puts "Scorelist containes less than 5 value resulting in relative grading to be useless. Proceeding to traditional grading"
     return traditional_grading(unsorted_list)
   end
   # Preparing our list
@@ -92,16 +107,50 @@ def relative_grading(unsorted_list)
 
   # Determine whether length of sortedList is less than grade buckets after removing duplicates.
   # If true, revert to normal grading.
+
   if sortedList.length < config[:buckets].length
     puts "Score list contains less than 5 values making relative_grading useless. Reverting to normal grading method."
     return traditional_grading(unsorted_list)
   end
 
+  # Determine how the score list will be divided.
+
   div_num = sortedList.length / config[:buckets].length.round
-  modulus = sortedList.length % config[:buckets].length # Determine the remainder for the previous division
+  modulus = sortedList.length % config[:buckets].length
+
+  grade_buckets = fill_array(div_num, config[:buckets].length)
+
+  # Check the bucket length is equal
+  if grade_buckets.length != config[:buckets].length
+    puts "Number of the buckets are not the same as the number buckets defined in the config. Exiting the program."
+  end
+
+   # for every extra numbers, the buckets need to be increased by one.
+  if modulus != 0
+    index = 0
+    while index <= modulus do
+      grade_buckets[index]+= 1
+    end
+  end
+
+  if config.rounding == 'floor'
+    grade_buckets.reverse()
+    duplicate_scores.reverse()
+  end
+
+  if unsorted_list.length != sum_array(grade_buckets) + duplicate_scores.length
+    puts "There was an error calculating the size of each grade bucket."
+    return false;
+  end
+
+  bucker_pointer = 0 # current point on the bucket
+  bucker_counter = 0 # counter to determine each score place in each bucket
+
+  if config.debugging == true
+    puts "\nIteration #" + (index + 1) + " on score of " + sortedList[index]
+    puts "Pointer: " + bucket_pointer
+    puts "Counter: " + bucket_counter
+  end
 end
 
-# Determine how the score list will be divided.
-
-
- relative_grading([99, 92, 91, 91, 89, 85, 83, 82, 80, 79, 78, 78, 77, 76, 75, 74, 62, 55, 43, 20])
+relative_grading([99, 92, 91, 91, 89, 85, 83, 82, 80, 79, 78, 78, 77, 76, 75, 74, 62, 55, 43, 20])
