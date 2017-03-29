@@ -1,4 +1,56 @@
-# interview question for in Ruby code  
+# Athenium Coding Exercise
+# -------------------------
+# A teacher gives a class of students an exam. She decides to grade the
+# exam using the following method:
+# * A score in the top 20% of all scores is an A.
+# * A score in the next 20% of scores is a B.
+# * A score in the next 20% of scores is a C.
+# * A score in the next 20% of scores is a D.
+# * A score in the bottom 20% of scores is an F.
+# For example, if a class of 20 students has the following scores:
+# 99, 92, 91, 91, 89, 85, 83, 82, 80, 79, 78, 78, 77, 76, 75, 74, 62, 55,
+# 43, 20
+# As there are 20 grades in this example, each 20% grade bucket will
+# contain 4 scores. The first four scores (99, 92, 91, 91) would be an A,
+# scores 5 through 8 (89,85, 83, 82) would be a B, scores 9 through 12 (80,
+# 79, 78, 78) would be a C,scores 13 through 16 would be a D (77, 76, 75,
+# 74) and scores 17 through 20 (62, 55, 43, 20) would be an F.
+# Write a function that takes an arbitrary (possibly unsorted) score list
+# of any length (not necessarily the list used as an example above) as a
+# parameter, and returns a grade for each score.
+# ADDITIONAL REQUIREMENT: If there are two (or more) scores that are
+# identical, then those identical numerical scores must always receive the
+# same grade, even if that causes the grade distribution to be uneven.
+# We will use the following criteria to evaluate your solution:
+# 1) Does the function return a data structure that contains the same
+# number of scores as the input along with a corresponding letter grade of
+# A, B, C, D, F. Example output for input [99,82,80,75,60]: [[99, A], [82,
+# B], [80, C], [75, D], [60, F]]
+# You are not required to use this exact output format, as long as it's
+# clear what grade goes with each score in the input.
+# 2) Do identical scores receive the same letter grade (to accomplish this
+# the number of scores receiving each grade may be uneven, which is fine)
+# 3) Does it gracefully and consistently handle lists that are not
+# divisible by 5
+# 4) Does it handle lists that contain fewer than 5 scores.
+# 5) Is your code syntactically valid for the language you chose (we will
+# be executing your code)
+# 6) Is your code well commented
+# 7) Is your code well structured and extensible
+# Please complete this exercise by choosing your desired language from one
+# of the options below and filling in the function for that language.
+# Please only complete ONE.
+
+# Ruby
+# def atheniumGrading(scores)
+# // your code here
+# return scoreWithGrades
+# end
+# puts(atheniumGrading([99, 92, 91, 91, 89, 85, 83, 82, 80, 79, 78, 78, 77,
+# 76, 75, 74, 62, 55, 43, 20]))
+
+
+
 
 def sort(unsorted_list)
   unsorted_list.sort { |a, b| b <=> a }
@@ -23,13 +75,13 @@ end
 # Gives the total sum of all the elements in the array
 def sum_array(array)
   index = 0
-  length = array.length
-  sum = 0
+  length = array.length # store array length
+  sum = 0   # total sum in array
   while index < length
-    sum += array[index]
+    sum += array[index] # add each index into sum
     index += 1
   end
-  sum
+  sum  # display sum
 end
 
 # Fill array with elements a number of times.
@@ -43,7 +95,7 @@ def fill_array(value, length)
   return arr
 end
 
-# Traditional_grading will be called if the length of the List is less than the bucket list, which is 5.
+# Traditional_grading will be call-back function in case the length of the List is less than 5.
 
 def traditional_grading(unsorted_list)
 sorted_list = sort(unsorted_list)
@@ -61,7 +113,8 @@ sorted_list.length.times do
   elsif sorted_list[i] >= 80
     change_grades.push(
     {
-      score: sorted_list[i], grade: 'B'
+      score: sorted_list[i],
+      grade: 'B'
     })
   elsif sorted_list[i] >= 70
     change_grades.push({
@@ -84,15 +137,14 @@ end
   puts change_grades
 end
 
-# This is the main function that determines which grading will be appropriate.
+# score_with_grade is the main function that determines which grading will be appropriate.
 # Traditional if the length is less than 5. Relative if more than five and has duplicates.
 
 def score_with_grade(unsorted_list)
   config = {
       buckets: [
         'A', 'B', 'C', 'D', 'F'], # each bucket has a letter grade for score.
-      rounding: 'ceiling',
-      debugging: true
+      debugging: false
   }
 
   if unsorted_list.length < config[:buckets].length
@@ -164,6 +216,7 @@ def score_with_grade(unsorted_list)
       bucket_counter = 0  # reset bucket_counter to 1
     end
 
+  # Checks if current score exist in duplicate score array. If this is true the function returns the duplicate scores back to the score list with the grade matching its duplicate.
     while sorted_list[index] == duplicate_scores[0]
     grade_array.push({
       score: sorted_list[index], # score that is being parsed in the array
@@ -171,16 +224,17 @@ def score_with_grade(unsorted_list)
     })
     duplicate_scores.shift # delete the score from the array its been pushed to.
     end
-
+  
+  # parse score in the list into grade.
     grade_array.push({
       score: sorted_list[index], # The score we are parsing in the sorted_list
       grade: config[:buckets][bucket_pointer] # The letter value associated with the bucket we are within
     })
-      bucket_counter += 1;
-      index += 1
+      bucket_counter += 1
+      index += 1  # increment 1
     end
 
-    puts grade_array
+    puts grade_array # display scores with matching grrade.
 end
 # test for more than 5 characters
 score_with_grade([99, 92, 91, 91, 89, 85, 83, 82, 80, 79, 78, 78, 77, 76, 75, 74, 62, 55, 43, 20])
